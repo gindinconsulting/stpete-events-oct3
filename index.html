@@ -6,9 +6,8 @@
 <title>St. Pete Day Planner — Sat Oct 3, 2026</title>
 <style>
   :root {
-    --bg: #0d1017; --card: #171d2b; --text: #eaeef6; --muted: #9aa7bd;
-    --accent: #ffb454; --link: #6cb6ff;
-    --green: #3fb950; --amber: #e3b341; --indoor: #8ea2ff;
+    --bg: #f4f6fa; --card: #ffffff; --text: #1c2333; --muted: #5a6678;
+    --link: #2563eb;
     --pad: 18px;
   }
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -20,87 +19,109 @@
   }
   .wrap { max-width: 560px; margin: 0 auto; padding: 0 var(--pad); }
 
-  header { padding: 28px 0 8px; }
-  h1 { font-size: 1.45rem; line-height: 1.25; margin: 0; }
-  h1 .date { display: block; color: var(--accent); font-size: 1.05rem; font-weight: 600; margin-top: 4px; }
-  .wx-hero {
-    margin-top: 14px; background: linear-gradient(135deg, #1b2436, #14202e);
-    border: 1px solid #2b3852; border-radius: 16px; padding: 14px 16px; font-size: .9rem; color: var(--muted);
+  /* ── colorful gradient banner ── */
+  .hero {
+    margin-top: 16px; border-radius: 22px; color: #fff; padding: 24px 20px 20px;
+    background: linear-gradient(135deg, #38bdf8 0%, #6366f1 45%, #d946ef 80%, #f97316 115%);
+    box-shadow: 0 12px 32px rgba(80, 90, 220, .28);
   }
-  .wx-hero b { color: var(--text); }
+  .hero h1 { font-size: 1.45rem; line-height: 1.25; margin: 0; }
+  .hero .date { display: block; font-size: 1.02rem; font-weight: 600; opacity: .95; margin-top: 4px; }
+  .hero .wx {
+    margin-top: 14px; padding: 12px 14px; border-radius: 14px;
+    background: rgba(255,255,255,.16); backdrop-filter: blur(2px);
+    font-size: .9rem; line-height: 1.5;
+  }
+  .hero .wx b { color: #fff; }
 
+  /* ── section headers, colored per time of day ── */
   section { margin-top: 30px; }
   .sec-head {
-    display: flex; align-items: baseline; gap: 10px;
-    padding: 0 2px 10px; border-bottom: 1px solid #232d44; margin-bottom: 14px;
-    position: sticky; top: 0; background: var(--bg); z-index: 5; padding-top: 10px;
+    display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
+    padding: 10px 2px; border-bottom: 2px solid currentColor; margin-bottom: 14px;
+    position: sticky; top: 0; background: var(--bg); z-index: 5;
   }
   .sec-head h2 { font-size: 1.15rem; margin: 0; }
-  .sec-head .when { color: var(--muted); font-size: .85rem; }
+  .sec-head .when { font-size: .85rem; opacity: .75; }
+  .sec-morning .sec-head { color: #d97706; }
+  .sec-midday  .sec-head { color: #dc2626; }
+  .sec-evening .sec-head { color: #7c3aed; }
+  .sec-late    .sec-head { color: #2563eb; }
+  .sec-head h2, .sec-head .when { color: inherit; }
 
+  /* ── cards: white with a colored weather accent ── */
   .card {
     background: var(--card); border-radius: 18px; padding: 16px;
-    margin-bottom: 14px; border-left: 4px solid var(--green);
-    box-shadow: 0 2px 10px rgba(0,0,0,.35);
+    margin-bottom: 14px; border-left: 5px solid #22c55e;
+    box-shadow: 0 2px 12px rgba(30, 41, 80, .08);
   }
-  .card.amber { border-left-color: var(--amber); }
-  .card.indoor { border-left-color: var(--indoor); }
-  .card.star { background: linear-gradient(160deg, #1d2436, #241f14); }
+  .card.risk  { border-left-color: #f59e0b; }
+  .card.in    { border-left-color: #6366f1; }
+  .card.star  { background: linear-gradient(160deg, #fff8ec 0%, #ffffff 60%); border-left-color: #6366f1; }
 
   .time-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-  .time { font-weight: 700; font-size: 1.05rem; color: var(--accent); }
+  .time { font-weight: 800; font-size: 1.05rem; color: #c2410c; }
   .badge {
     font-size: .72rem; font-weight: 700; letter-spacing: .03em;
-    padding: 3px 9px; border-radius: 999px; white-space: nowrap;
+    padding: 3px 10px; border-radius: 999px; white-space: nowrap;
   }
-  .badge.ok    { background: rgba(63,185,80,.15); color: var(--green); }
-  .badge.risk  { background: rgba(227,179,65,.15); color: var(--amber); }
-  .badge.in    { background: rgba(142,162,255,.14); color: var(--indoor); }
+  .badge.ok   { background: #e5f7ec; color: #15803d; }
+  .badge.risk { background: #fdf1d7; color: #a16207; }
+  .badge.in   { background: #e8ecff; color: #4338ca; }
 
-  .event-name { font-size: 1.18rem; font-weight: 700; margin: 8px 0 2px; }
+  .event-name { font-size: 1.18rem; font-weight: 800; margin: 8px 0 2px; }
   .event-name a { color: var(--text); text-decoration: none; }
   .event-name a:hover { color: var(--link); }
   .desc { color: var(--muted); font-size: .92rem; margin: 6px 0 0; }
 
+  /* ── meta rows: true two-column grid so wrapped text hangs under the value ── */
   .meta { margin-top: 12px; font-size: .9rem; }
-  .meta div { padding: 3px 0; color: var(--muted); }
-  .meta .k { display: inline-block; width: 76px; color: #7482a0; font-size: .8rem; text-transform: uppercase; letter-spacing: .04em; vertical-align: top; }
-  .meta a { color: var(--link); text-decoration: none; }
-
-  .wx-line {
-    margin-top: 10px; padding: 9px 12px; border-radius: 10px;
-    background: #10151f; font-size: .88rem;
+  .meta div {
+    display: grid; grid-template-columns: 78px 1fr; column-gap: 10px;
+    padding: 4px 0; color: var(--muted);
   }
-  .wx-line.ok { color: #7ee2a8; } .wx-line.risk { color: #f0d58a; } .wx-line.in { color: #aab8ff; }
+  .meta .k {
+    color: #8a94a6; font-size: .76rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .06em; padding-top: 2px;
+  }
+  .meta a { color: var(--link); text-decoration: none; }
+  .meta a:hover { text-decoration: underline; }
+
+  .wx-line { margin-top: 12px; padding: 10px 12px; border-radius: 12px; font-size: .88rem; }
+  .wx-line.ok   { background: #e9f9ef; color: #116b3d; }
+  .wx-line.risk { background: #fdf3dd; color: #8f5a06; }
+  .wx-line.in   { background: #eaefff; color: #3a53c4; }
 
   .btns { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
   .btn {
     flex: 1 1 auto; text-align: center; padding: 12px 14px; border-radius: 12px;
     font-weight: 700; font-size: .92rem; text-decoration: none;
   }
-  .btn.primary { background: #2f6feb; color: #fff; }
-  .btn.ghost { background: #212b42; color: var(--link); }
+  .btn.primary { background: linear-gradient(135deg, #2563eb, #7c3aed); color: #fff;
+    box-shadow: 0 4px 12px rgba(60, 90, 230, .25); }
+  .btn.ghost { background: #eef2f9; color: #1d4ed8; border: 1px solid #dbe4f3; }
   .btn:active { transform: scale(.98); }
 
-  .extra-links { margin-top: 10px; font-size: .85rem; color: var(--muted); }
+  .extra-links { margin-top: 10px; font-size: .85rem; color: #7c8798; }
   .extra-links a { color: var(--link); text-decoration: none; }
+  .extra-links a:hover { text-decoration: underline; }
 
-  footer { margin-top: 36px; color: #66738f; font-size: .78rem; text-align: center; padding: 0 var(--pad); }
-  footer a { color: #7d8db1; }
+  footer { margin-top: 36px; color: #8a94a6; font-size: .78rem; text-align: center; padding: 0 var(--pad); }
+  footer a { color: #5b7cfa; }
 </style>
 </head>
 <body>
 <div class="wrap">
 
-<header>
+<div class="hero">
   <h1>🌴 St. Petersburg Day Planner<span class="date">Saturday, October 3, 2026 · 12 things worth doing</span></h1>
-  <div class="wx-hero">
+  <div class="wx">
     <b>Weather in one line:</b> near-perfect and hot (peak <b>90° at 3 PM</b>) until 5, then a <b>light-drizzle window 6–8 PM (max 41%)</b> that dries out by 9. Everything before dinner is green; only three evening events care — and all three survive a misting fine.
   </div>
-</header>
+</div>
 
 <!-- ═══════════ MORNING ═══════════ -->
-<section>
+<section class="sec-morning">
   <div class="sec-head"><h2>☀️ Morning</h2><span class="when">9 AM – noon · rain ≤7%</span></div>
 
   <div class="card">
@@ -148,10 +169,10 @@
 </section>
 
 <!-- ═══════════ MIDDAY / AFTERNOON ═══════════ -->
-<section>
+<section class="sec-midday">
   <div class="sec-head"><h2>🔥 Midday & Afternoon</h2><span class="when">11 AM – 5 PM · hot, dry</span></div>
 
-  <div class="card">
+  <div class="card risk">
     <div class="time-row"><span class="time">11:00 AM – 8:00 PM</span><span class="badge risk">🔥 HEAT → 🌦️ EVENING DRIZZLE</span></div>
     <div class="event-name"><a href="https://www.eventbrite.com/e/central-florida-food-truck-wars-tickets-1996887852321">🚚 Central Florida Food Truck Wars</a></div>
     <p class="desc">Two-day food-truck brawl: dozens of the region's best trucks, live entertainment, vendors, free parking. Pro move: skip the 1 PM furnace, show up around 5 PM when it cools and the evening crowd builds — you're done eating before the drizzle window opens at 6.</p>
@@ -168,10 +189,10 @@
     <div class="extra-links">Also: <a href="https://ilovetheburg.com/saturday-shoppes-food-truck-wars/">event preview</a></div>
   </div>
 
-  <div class="card star">
+  <div class="card risk">
     <div class="time-row"><span class="time">12:00 PM – 10:00 PM</span><span class="badge risk">🔥 HOT DAY → 🌦️ EVENING DRIZZLE</span></div>
     <div class="event-name"><a href="https://stpetepier.org/signature-event/piertoberfest/">🥨 Piertoberfest — Oktoberfest on the St. Pete Pier</a></div>
-    <p class="desc">4th annual Bavarian takeover on the pier, and honestly the most fun thing on the board if you like beer, food, and music: oompah band (Apple Strudel Oktoberfest Band, 2–5 PM), German DJ Keytone, authentic German beers (Paulaner, Radeberger, Hack), schnitzel-and-pretzel food, traditional dancers, and competitions for stein-hoisting, keg throwing, tug-of-war, plus a costume contest. Admission is free; the play is the $25 commemorative stein with two pints pre-purchased online ($41 value). Best stretch: arrive ~4 PM — cool enough, band's encore just wrapped, DJ takes over, sunset over the bay, and you're deep in the party before the drizzle even thinks about showing up.</p>
+    <p class="desc">4th annual Bavarian takeover on the pier, and honestly the most fun thing on the board if you like beer, food, and music: oompah band (Apple Strudel Oktoberfest Band, 2–5 PM), German DJ Keytone, authentic German beers (Paulaner, Radeberger, Hack), schnitzel-and-pretzel food, traditional dancers, and competitions for stein-hoisting, keg throwing, tug-of-war, plus a costume contest. Admission is free; the play is the $25 commemorative stein with two pints pre-purchased online ($41 value). Best stretch: arrive ~4 PM — cool enough, the band has just wrapped, DJ takes over, sunset over the bay, and you're deep in the party before the drizzle even thinks about showing up.</p>
     <div class="meta">
       <div><span class="k">Where</span><a href="https://maps.google.com/?q=St+Pete+Pier+740+1st+Ave+NE+St+Petersburg+FL+33701">St. Pete Pier, Family Park — 740 1st Ave NE 📍</a></div>
       <div><span class="k">Phone</span>via <a href="https://stpetepier.org/signature-event/piertoberfest/">stpetepier.org</a> (no event line published)</div>
@@ -203,7 +224,7 @@
 </section>
 
 <!-- ═══════════ EVENING ═══════════ -->
-<section>
+<section class="sec-evening">
   <div class="sec-head"><h2>🌆 Evening</h2><span class="when">6:30 PM – late · drizzle window 6–8 PM</span></div>
 
   <div class="card star">
@@ -223,7 +244,7 @@
     <div class="extra-links">Also: <a href="https://www.wusf.org/sports/2026-10-03/rays-yankees-meet-in-game-1-of-the-al-division-series-and-tropicana-field-is-sold-out">sold-out report</a> · <a href="https://sports.yahoo.com/articles/looking-yankees-rays-tickets-heres-163759131.html">price guide</a></div>
   </div>
 
-  <div class="card">
+  <div class="card risk">
     <div class="time-row"><span class="time">7:30 PM</span><span class="badge risk">🌦️ 36–41% DRIZZLE</span></div>
     <div class="event-name"><a href="https://www.rowdiessoccer.com">⚽ Rowdies vs. Miami FC</a></div>
     <p class="desc">USL season finale at a waterfront stadium, seats from $17 — genuinely the best-value night out on the board. It sits right in the drizzle window, but we're talking misting odds, not a washout; a light shell beats an umbrella (many stadiums ban them).</p>
@@ -239,7 +260,7 @@
     <div class="extra-links">Also: <a href="https://www.rowdiessoccer.com/news/2026-09-27/rowdies-to-open-2026-playoffs-at-home-on-october-30/">Rowdies announcement</a></div>
   </div>
 
-  <div class="card">
+  <div class="card in">
     <div class="time-row"><span class="time">7:30 PM</span><span class="badge in">🎭 INDOORS</span></div>
     <div class="event-name"><a href="https://www.livenation.com/event/vvG1VZ_a9uSVRy/caamp">🎵 CAAMP with Whitney</a></div>
     <p class="desc">Ohio folk band with sold-out-arena energy in a 2,000-seat theater — if you want tonight to feel like a proper night out instead of a hang, this is it. From about $101.</p>
@@ -247,7 +268,7 @@
       <div><span class="k">Where</span><a href="https://maps.google.com/?q=The+Mahaffey+Theater+400+1st+St+S+St+Petersburg+FL">The Mahaffey Theater, 400 1st St S 📍</a></div>
       <div><span class="k">Phone</span><a href="tel:+17278925721">(727) 892-5721</a></div>
     </div>
-    <div class="wx-line in">Rain-proof. Coat-check weather is the walk, and it's warm.</div>
+    <div class="wx-line in">Rain-proof. The walk is the only weather you'll feel, and it's warm.</div>
     <div class="btns">
       <a class="btn primary" href="https://maps.google.com/?q=The+Mahaffey+Theater+400+1st+St+S+St+Petersburg+FL">📍 Directions</a>
       <a class="btn ghost" href="https://www.livenation.com/event/vvG1VZ_a9uSVRy/caamp">Tickets</a>
@@ -255,7 +276,7 @@
     <div class="extra-links">Also: <a href="https://themahaffey.com/">Mahaffey box office</a></div>
   </div>
 
-  <div class="card">
+  <div class="card risk">
     <div class="time-row"><span class="time">8:00 PM</span><span class="badge risk">🌦️ RISK EASING</span></div>
     <div class="event-name"><a href="https://www.ticketmaster.com/mariachi-el-bronx-st-petersburg-florida-10-03-2026/event/0D0064E8CE24C90F">🎺 Mariachi El Bronx with Bedouin Soundclash</a></div>
     <p class="desc">Punk band plays punk songs as mariachi. Outdoor venue, from $42 — the drizzle odds start at 41% at the top of the evening and fall every hour after, so the riskiest part is the walk to your car, not the show.</p>
@@ -271,7 +292,7 @@
     <div class="extra-links">Also: <a href="https://www.livenation.com/event/vvG1VZ_CNCaG02/mariachi-el-bronx">Live Nation</a></div>
   </div>
 
-  <div class="card">
+  <div class="card in">
     <div class="time-row"><span class="time">8:00 PM</span><span class="badge in">🎭 INDOORS</span></div>
     <div class="event-name"><a href="https://www.americanstage.org">🎭 A Night With Janis Joplin</a></div>
     <p class="desc">Rock-jukebox tribute musical at American Stage, the little black-box theater on 3rd St N. Intimate, easy on the wallet, zero weather exposure.</p>
@@ -288,10 +309,10 @@
 </section>
 
 <!-- ═══════════ LATE ═══════════ -->
-<section>
+<section class="sec-late">
   <div class="sec-head"><h2>🌙 Late Night</h2><span class="when">9 PM onward · dry</span></div>
 
-  <div class="card">
+  <div class="card in">
     <div class="time-row"><span class="time">Late night</span><span class="badge in">🌙 INDOORS · DRY BY 9</span></div>
     <div class="event-name"><a href="https://flraves.com/cities/st.-petersburg">🔊 EDM at The Nest — MontyCler / Siren</a></div>
     <p class="desc">Basement-style rave inside St. Pete Brewing Co on 1st Ave N. The closer for the night — beer, bass, and by the time you leave the drizzle will be a memory.</p>
